@@ -56,6 +56,7 @@ let AC_GAME_OBJECTS = [];
 
 class AcGameObject{
     constructor(){
+        console.log("hhhhhh");
         AC_GAME_OBJECTS.push(this);
         // 是否执行过start函数
         this.has_called_start = false;
@@ -90,7 +91,7 @@ class AcGameObject{
 let last_timestamp;
 let AC_GAME_ANIMATION = function(timestamp){
     for (let i = 0; i < AC_GAME_OBJECTS.length; i++){
-        obj = AC_GAME_OBJECTS[i];
+        let obj = AC_GAME_OBJECTS[i];
         if (!obj.has_called_start){
             obj.start();
             obj.has_called_start = true;
@@ -122,6 +123,12 @@ class GameMap extends AcGameObject{
     }
 
     update(){
+        this.render();
+    }
+
+    render(){
+        this.ctx.fillStyle = "rgba(0, 0, 0)";
+        this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     }
 }
 class AcGamePlayground{
