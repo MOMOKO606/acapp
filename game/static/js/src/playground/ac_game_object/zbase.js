@@ -2,7 +2,6 @@ let AC_GAME_OBJECTS = [];
 
 class AcGameObject{
     constructor(){
-        console.log("hhhhhh");
         AC_GAME_OBJECTS.push(this);
         // 是否执行过start函数
         this.has_called_start = false;
