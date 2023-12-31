@@ -174,6 +174,7 @@ class Player extends AcGameObject{
                 if(outer.cur_skill === "fireball"){
                     outer.shoot_fireball(e.clientX, e.clientY);
                 }
+                //  技能释放结束后应重置cur skill
                 outer.cur_skill = null;
             }
         });
@@ -188,7 +189,17 @@ class Player extends AcGameObject{
     }
 
     shoot_fireball(tx, ty){
-        console.log("shoot fireball", tx, ty);
+        let x = this.x;
+        let y = this.y;
+        let radius = this.playground.height * 0.01;
+        let angle = Math.atan2(ty - this.y, tx - this.x);
+        let vx = Math.cos(angle);
+        let vy = Math.sin(angle);
+        let color = "orange";
+        let speed = this.playground.height * 0.5;
+        let move_length = this.playground.height * 1.5;
+        new FireBall(this.playground, this, x, y, radius, vx, vy, color, speed, move_length);
+
     }
 
     get_dist(x1, y1, x2, y2){
@@ -235,7 +246,7 @@ class FireBall extends AcGameObject{
         this.ctx = this.playground.game_map.ctx;
         this.x = x;
         this.y = y;
-        thix.vx = vx;
+        this.vx = vx;
         this.vy = vy;
         this.radius = radius;
         this.color = color;

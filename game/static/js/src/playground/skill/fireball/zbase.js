@@ -6,7 +6,7 @@ class FireBall extends AcGameObject{
         this.ctx = this.playground.game_map.ctx;
         this.x = x;
         this.y = y;
-        thix.vx = vx;
+        this.vx = vx;
         this.vy = vy;
         this.radius = radius;
         this.color = color;
