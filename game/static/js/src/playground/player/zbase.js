@@ -14,6 +14,8 @@ class Player extends AcGameObject{
         this.is_me = is_me;
         //  精度，小于0.1即视为0
         this.eps = 0.1;
+        //  当前技能
+        this.cur_skill = null;
     }
 
     start(){
@@ -36,8 +38,25 @@ class Player extends AcGameObject{
             if(e.which === 3){
                 //  注意这里不能用this, 因为this会表示这个function自己.
                 outer.move_to(e.clientX, e.clientY);
+            }else if(e.which === 1){
+                if(outer.cur_skill === "fireball"){
+                    outer.shoot_fireball(e.clientX, e.clientY);
+                }
+                outer.cur_skill = null;
             }
         });
+
+        $(window).keydown(function(e){
+            //  q键
+            if(e.which === 81){
+                outer.cur_skill = "fireball";
+                return false;
+            }
+        });
+    }
+
+    shoot_fireball(tx, ty){
+        console.log("shoot fireball", tx, ty);
     }
 
     get_dist(x1, y1, x2, y2){
@@ -49,6 +68,7 @@ class Player extends AcGameObject{
     move_to(tx, ty){
         this.move_length = this.get_dist(this.x, this.y, tx, ty);
         let angle = Math.atan2(ty - this.y, tx - this.x);
+        //  vx vy表示x和y方向
         this.vx = Math.cos(angle);
         this.vy = Math.sin(angle);
     }
