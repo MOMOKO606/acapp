@@ -126,7 +126,7 @@ class GameMap extends AcGameObject{
     }
 
     render(){
-        this.ctx.fillStyle = "rgba(0, 0, 0)";
+        this.ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
         this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     }
 }
@@ -137,18 +137,65 @@ class Player extends AcGameObject{
         this.ctx = this.playground.game_map.ctx;
         this.x = x;
         this.y = y;
+        this.vx = 0;
+        this.vy = 0;
+        this.move_length = 0;
         this.radius = radius;
         this.color = color;
+        this.speed = speed;
         this.is_me = is_me;
         //  精度，小于0.1即视为0
-        this.eps = 0.1;  
+        this.eps = 0.1;
     }
 
     start(){
+        //  如果这个player是本机，则需要监听鼠标。
+        if(this.is_me){
+            this.add_listening_events();
+        }
+    }
+
+    add_listening_events(){
+        let outer = this;
+        //  禁止鼠标右键显示菜单
+        this.playground.game_map.$canvas.on("contextmenu", function(){
+            return false;
+        });
+        //  e == 3为鼠标右键
+        //  e == 1为鼠标左键
+        //  e == 2为鼠标滚轮
+        this.playground.game_map.$canvas.mousedown(function(e){
+            if(e.which === 3){
+                //  注意这里不能用this, 因为this会表示这个function自己.
+                outer.move_to(e.clientX, e.clientY);
+            }
+        });
+    }
+
+    get_dist(x1, y1, x2, y2){
+        let dx = x1 - x2;
+        let dy = y1 - y2;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    move_to(tx, ty){
+        this.move_length = this.get_dist(this.x, this.y, tx, ty);
+        let angle = Math.atan2(ty - this.y, tx - this.x);
+        this.vx = Math.cos(angle);
+        this.vy = Math.sin(angle);
     }
 
     update(){
         //  每一帧都要画一遍，就像人每天都要吃饭
+        if(this.move_length < this.eps){
+            this.move_length = 0;
+            this.vx = this.vy = 0;
+        }else{
+            let moved = Math.min(this.move_length, this.speed * this.timedelta / 1000);
+            this.x += this.vx * moved;
+            this.y += this.vy * moved;
+            this.move_length -= moved;
+        }
         this.render();
     }
 
