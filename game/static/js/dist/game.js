@@ -72,13 +72,13 @@ class AcGameObject{
     }
 
     //  被销毁前执行一次
-    on_destory(){
+    on_destroy(){
 
     }
 
     // 删掉该物体
     destroy(){
-        this.on_destory();
+        this.on_destroy();
         for (let i = 0; i < AC_GAME_OBJECTS.length; i++){
             if (AC_GAME_OBJECTS[i] === this){
                 AC_GAME_OBJECTS.splice(i, 1);
@@ -154,6 +154,10 @@ class Player extends AcGameObject{
         //  如果这个player是本机，则需要监听鼠标。
         if(this.is_me){
             this.add_listening_events();
+        }else{
+            let tx = Math.random() * this.playground.width;
+            let ty = Math.random() * this.playground.height;
+            this.move_to(tx, ty);
         }
     }
 
@@ -197,7 +201,7 @@ class Player extends AcGameObject{
         let vy = Math.sin(angle);
         let color = "orange";
         let speed = this.playground.height * 0.5;
-        let move_length = this.playground.height * 1.5;
+        let move_length = this.playground.height * 1;
         new FireBall(this.playground, this, x, y, radius, vx, vy, color, speed, move_length);
 
     }
@@ -221,6 +225,11 @@ class Player extends AcGameObject{
         if(this.move_length < this.eps){
             this.move_length = 0;
             this.vx = this.vy = 0;
+            if(!this.is_me){
+                let tx = Math.random() * this.playground.width;
+                let ty = Math.random() * this.playground.height;
+                this.move_to(tx, ty);
+            }
         }else{
             let moved = Math.min(this.move_length, this.speed * this.timedelta / 1000);
             this.x += this.vx * moved;
@@ -288,6 +297,10 @@ class AcGamePlayground{
         this.game_map = new GameMap(this);
         this.players = [];
         this.players.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, "white", this.height * 0.15, true));
+
+        for(let i = 0; i < 5; i++){
+            this.players.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, "blue", this.height * 0.15, false));
+        }
 
 
         this.start();
