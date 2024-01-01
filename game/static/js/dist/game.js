@@ -187,6 +187,8 @@ class Player extends AcGameObject{
         this.color = color;
         this.speed = speed;
         this.is_me = is_me;
+        this.is_dead = false;
+        this.countdown = 0;
         //  被击中后减速效果
         this.friction = 0.9;
         //  精度，小于0.1即视为0
@@ -238,6 +240,7 @@ class Player extends AcGameObject{
     }
 
     shoot_fireball(tx, ty){
+        if(this.is_dead){return false;}
         let x = this.x;
         let y = this.y;
         let radius = this.playground.height * 0.01;
@@ -248,9 +251,9 @@ class Player extends AcGameObject{
         let speed = this.playground.height * 0.5;
         let move_length = this.playground.height * 1;
         //  注意player的radius是height * 0.05
-        //  fireball的damage是height * 0.01
-        //  所以被攻击一次损失20%的生命值（生命值即radius）
-        new FireBall(this.playground, this, x, y, radius, vx, vy, color, speed, move_length, this.playground.height * 0.01);
+        //  fireball的damage是height * 0.0125
+        //  所以被攻击一次损失25%的生命值（生命值即radius）
+        new FireBall(this.playground, this, x, y, radius, vx, vy, color, speed, move_length, this.playground.height * 0.0125);
 
     }
 
@@ -269,17 +272,7 @@ class Player extends AcGameObject{
     }
 
     is_attacked(angle, damage){
-        this.radius -= damage;
-        if(this.radius < this.eps){
-            this.destroy();
-            return false;
-        }
-        this.damage_x = Math.cos(angle);
-        this.damage_y = Math.sin(angle);
-        this.damage_speed = damage * 100;
-        //  被攻击后速度越来越快
-        this.speed *= 1.25;
-
+        //  被攻击后的particle四散效果
         for(let i = 0; i < 20 + Math.random() * 10; i++){
             let x = this.x, y = this.y;
             let radius = this.radius * Math.random() * 0.1;
@@ -290,9 +283,28 @@ class Player extends AcGameObject{
             let move_length = this.radius * Math.random() * 5;
             new Particle(this.playground, x, y, radius, vx, vy, color, speed, move_length);
         }
+
+        this.radius -= damage;
+        if(this.radius < 10){
+            this.is_dead = true;
+            this.destroy();
+            return false;
+        }
+        this.damage_x = Math.cos(angle);
+        this.damage_y = Math.sin(angle);
+        this.damage_speed = damage * 100;
+        //  被攻击后速度越来越快
+        this.speed *= 1.25;
     }
 
     update(){
+        //  累加时间
+        this.countdown += this.timedelta / 1000;
+        //  给一定的概率随机攻击
+        if(!this.is_me && this.countdown > 5 && Math.random() < 1 / 360.0){
+            let player = this.playground.players[Math.floor(Math.random() * this.playground.players.length)];
+            this.shoot_fireball(player.x, player.y);
+        }
         if(this.damage_speed > this.eps){
             this.vx = this.vy = 0;
             this.move_length = 0;
@@ -408,11 +420,16 @@ class AcGamePlayground{
         this.players.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, "white", this.height * 0.15, true));
 
         for(let i = 0; i < 5; i++){
-            this.players.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, "blue", this.height * 0.15, false));
+            this.players.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, this.get_random_color(), this.height * 0.15, false));
         }
 
 
         this.start();
+    }
+
+    get_random_color(){
+        let colors = ["blue", "red", "pink", "purple", "green", "yellow"];
+        return colors[Math.floor(Math.random() * 6)];
     }
 
    // add_listening_events(){
