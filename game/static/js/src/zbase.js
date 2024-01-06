@@ -5,7 +5,6 @@ export class AcGame{
        // 为方便调试，暂时注释掉菜单页面
        this.menu = new AcGameMenu(this);
        this.playground = new AcGamePlayground(this);
-       this.playground.hide();
        this.start();
    }
 

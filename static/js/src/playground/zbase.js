@@ -3,18 +3,7 @@ class AcGamePlayground{
         this.root = root;
         this.$playground = $(`<div class="ac-game-playground"></div>`); // HTML对象
 
-        this.root.$ac_game.append(this.$playground); // 将这个HTML对象加入到HTML对象$ac_game
-        this.width = this.$playground.width();
-        this.height = this.$playground.height();
-        this.game_map = new GameMap(this);
-        this.players = [];
-        this.players.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, "white", this.height * 0.25, true));
-
-        for(let i = 0; i < 5; i++){
-            this.players.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, this.get_random_color(), this.height * 0.15, false));
-        }
-
-
+        this.hide();
         this.start();
     }
 
@@ -33,6 +22,15 @@ class AcGamePlayground{
 
     show(){
         this.$playground.show(); // 显示这个$playground对象
+        this.root.$ac_game.append(this.$playground); // 将这个HTML对象加入到HTML对象$ac_game
+        this.width = this.$playground.width();
+        this.height = this.$playground.height();
+        this.game_map = new GameMap(this);
+        this.players = [];
+        this.players.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, "white", this.height * 0.25, true));
+        for(let i = 0; i < 5; i++){
+            this.players.push(new Player(this, this.width / 2, this.height/ 2, this.height * 0.05, this.get_random_color(), this.height * 0.15, false));
+        }
     }
 
     hide(){
