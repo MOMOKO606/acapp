@@ -17,7 +17,9 @@ class AcGameMenu {
          </div>
      </div>
 </div>
-`); // 创建一个HTML对象，menu
+`); 
+        this.$menu.hide();
+        // 创建一个HTML对象，menu
         this.root.$ac_game.append(this.$menu); // 将HTML对象加入到这个游戏里面
         this.$single_mode = this.$menu.find('.ac-game-menu-field-item-single-mode'); // 找到这个“单人模式”对象
         this.$multi_mode = this.$menu.find('.ac-game-menu-field-item-multi-mode'); // 找到这个“多人模式”对象
