@@ -479,6 +479,24 @@ class Settings{
         this.username = "";
         this.photo = "";
 
+        this.$settings = $(`
+            <div class="ac-game-settings">
+                <div class="ac-game-settings-login">
+                </div>
+                <div class="ac-game-settings-register">
+                </div>
+            </div>
+        `);
+        this.$login = this.$settings.find(".ac-game-settings-login");
+
+        this.$login.hide();
+
+        this.$register = this.$settings.find(".ac-game-settings-register");
+
+        this.$register.hide();
+
+        this.root.$ac_game.append(this.$settings);
+
         this.start();
     }
 
@@ -488,10 +506,14 @@ class Settings{
 
     //  打开注册界面
     register(){
+        this.$login.hide();
+        this.$register.show();
     }
 
     //  打开登录界面
     login(){
+        this.$register.hide();
+        this.$login.show();
     }
 
     getinfo(){
@@ -517,9 +539,11 @@ class Settings{
     }
 
     hide(){
+        this.$settings.hide();
     }
 
     show(){
+        this.$settings.show();
     }
 }
 export class AcGame{
