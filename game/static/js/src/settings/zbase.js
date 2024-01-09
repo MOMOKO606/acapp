@@ -10,6 +10,30 @@ class Settings{
         this.$settings = $(`
             <div class="ac-game-settings">
                 <div class="ac-game-settings-login">
+                    <div class="ac-game-settings-title">
+                        Login
+                    </div>
+                    <div class="ac-game-settings-username">
+                        <div class="ac-game-settings-item">
+                            <input type="text" placeholder="username">
+                        </div>
+                    </div>
+                    <div class="ac-game-settings-password">
+                        <div class="ac-game-settings-item">
+                            <input type="password" placeholder="password">
+                        </div>
+                    </div>
+                    <div class="ac-game-settings-submit">
+                        <div class="ac-game-settings-item">
+                            <button>Login to your account</button>
+                        </div>
+                    </div>
+                    <div class="ac-game-settings-error-messages">
+                            Invalid username or password
+                    </div>
+                    <div class="ac-game-settings-option">
+                            Register
+                    </div>
                 </div>
                 <div class="ac-game-settings-register">
                 </div>
