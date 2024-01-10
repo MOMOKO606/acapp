@@ -15,12 +15,12 @@ class Settings{
                     </div>
                     <div class="ac-game-settings-username">
                         <div class="ac-game-settings-item">
-                            <input type="text" placeholder="username">
+                            <input type="text" placeholder="Username">
                         </div>
                     </div>
                     <div class="ac-game-settings-password">
                         <div class="ac-game-settings-item">
-                            <input type="password" placeholder="password">
+                            <input type="password" placeholder="Password">
                         </div>
                     </div>
                     <div class="ac-game-settings-submit">
@@ -53,8 +53,32 @@ class Settings{
             </button>
                     </div>
                 </div>
-                <div class="ac-game-settings-register">
-                </div>
+            <div class="ac-game-settings-register">
+                    <div class="ac-game-settings-title">
+                       Register
+                    </div>
+                    <div class="ac-game-settings-username">
+                        <div class="ac-game-settings-item">
+                            <input type="text" placeholder="Username">
+                        </div>
+                    </div>
+                    <div class="ac-game-settings-password">
+                        <div class="ac-game-settings-item">
+                            <input type="password" placeholder="Password">
+                        </div>
+                    </div>
+                    <div class="ac-game-settings-password">
+                        <div class="ac-game-settings-item">
+                            <input type="password" placeholder="Confirm Password">
+                        </div>
+                    <div class="ac-game-settings-submit">
+                        <div class="ac-game-settings-item">
+                            <button>Sign up</button>
+                        </div>
+                    </div>
+                    <div class="ac-game-settings-option">
+                            Login
+                    </div>
             </div>
         `);
         this.$login = this.$settings.find(".ac-game-settings-login");
@@ -102,7 +126,8 @@ class Settings{
                     outer.hide();
                     outer.root.menu.show();
                 }else{
-                    outer.login();
+                    // outer.login();
+                    outer.register();
                 }
             }
         });
