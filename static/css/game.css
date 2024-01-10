@@ -7,7 +7,7 @@
 }
 
 .ac-game-settings-login{
-    height: 41vh;
+    height: 45vh;
     width: 20vw;
     position: relative;
     top: 50%;
@@ -76,9 +76,10 @@
     transform: translate(-50%, -50%);
     background-color: #4CAF50;
     border-radius: 5px;
+    cursor: pointer;
 }
 
-.ac-game-settings-error-messages{
+.ac-game-settings-error-message{
     color: red;
     font-size: 1.5vh;
     display: inline;
@@ -97,7 +98,7 @@
 
 .ac-game-settings-google{
     position: relative;
-    top: 12%;
+    top: 18%;
     left: 65%;
     transform: translate(-50%, -50%);
 }
