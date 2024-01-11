@@ -13,7 +13,7 @@ class AcGameMenu {
         </div>
       <br><br>
         <div class="ac-game-menu-field-item ac-game-menu-field-item-settings">
-            Preferences
+            Preferences(Logout)
          </div>
      </div>
 </div>
@@ -42,7 +42,8 @@ class AcGameMenu {
             console.log("click multi mode");
         });
         this.$settings.click(function(){
-             console.log("click settings");
+            console.log("click settings");
+            outer.root.settings.logout_on_remote();
         });
     }
 
@@ -645,6 +646,18 @@ class Settings{
 
     //  在远程服务器上登出
     logout_on_remote(){
+        if(this.platform === "ACAPP") return false;
+
+        $.ajax({
+            url: "https://app6423.acapp.acwing.com.cn/settings/logout/",
+            type: "GET",
+            success: function(resp){
+                console.log(resp);
+                if(resp.result === "success"){
+                    location.reload();
+                }
+            }
+        });
     }
 
 

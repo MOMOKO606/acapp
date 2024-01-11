@@ -173,6 +173,18 @@ class Settings{
 
     //  在远程服务器上登出
     logout_on_remote(){
+        if(this.platform === "ACAPP") return false;
+
+        $.ajax({
+            url: "https://app6423.acapp.acwing.com.cn/settings/logout/",
+            type: "GET",
+            success: function(resp){
+                console.log(resp);
+                if(resp.result === "success"){
+                    location.reload();
+                }
+            }
+        });
     }
 
 
