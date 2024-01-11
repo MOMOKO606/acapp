@@ -14,5 +14,5 @@ def signin(request):
     #  登录    
     login(request, user)
     return JsonResponse({
-        "result": "success"
+        "result": "success",
     })

@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from game.models.player.player import Player
 
 def getinfo_acapp(request):
-    player = Player.objects.all()[0]
+    player = Player.objects.filter(user = user)[0]
     return JsonResponse({
         'result': "success",
         'username': player.user.username,
@@ -18,7 +18,7 @@ def getinfo_web(request):
 	    'result': "未登录"
         })
     else:
-    	player = Player.objects.all()[0]
+    	player = Player.objects.filter(user = user)[0]
     	return JsonResponse({
             'result': "success",
             'username': player.user.username,
