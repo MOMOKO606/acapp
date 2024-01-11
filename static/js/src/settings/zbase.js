@@ -125,6 +125,9 @@ class Settings{
         this.$login_register.click(function(){
             outer.register();
         });
+        this.$login_submit.click(function(){
+            outer.login_on_remote();
+        });
     }
 
     add_listening_events_register(){
@@ -132,6 +135,44 @@ class Settings{
         this.$register_login.click(function(){
             outer.login();
         });
+    }
+
+    //  在远程服务器上登录
+    login_on_remote(){
+        let outer = this;
+        let username = this.$login_username.val();  //val()表示取出input的值
+        let password = this.$login_password.val();
+        this.$login_error_message.empty();  //清空error message
+
+        //  用ajax向server调用signin函数
+        $.ajax({
+            url: "https://app6423.acapp.acwing.com.cn/settings/login/",
+            type: "GET",
+            data: {
+                username: username,
+                password: password,
+            },
+            success: function(resp){
+                console.log(resp);
+                //  如果登录成功就原地刷新（cookie会记录登录成功）
+                //  则刷新后会通过getinfo获取信息，进而加载menu
+                //  登录成功直接刷新的模式和第三方授权一致
+                if(resp.result === "success"){
+                    location.reload();
+                }else{
+                    outer.$login_error_message.html(resp.result);
+                }
+            }
+
+        });
+    }
+
+    //  在远程服务器上注册
+    register_on_remote(){
+    }
+
+    //  在远程服务器上登出
+    logout_on_remote(){
     }
 
 
