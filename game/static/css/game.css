@@ -81,7 +81,7 @@
 
 .ac-game-settings-error-message{
     color: red;
-    font-size: 1.8vh;
+    font-size: 2vh;
     display: inline;
     float: left;
     padding-left: 1vw;
@@ -89,7 +89,7 @@
 
 .ac-game-settings-option{
     color: white;
-    font-size: 2.0vh;
+    font-size: 2.25vh;
     display: inline;
     float: right;
     padding-right: 1vw;

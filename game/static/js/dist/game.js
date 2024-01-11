@@ -502,7 +502,6 @@ class Settings{
             </div>
         </div>
         <div class="ac-game-settings-error-message">
-            Invalid username or password
         </div>
         <div class="ac-game-settings-option">
             Register
