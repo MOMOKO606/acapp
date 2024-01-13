@@ -5,6 +5,7 @@ class Player(models.Model):
     #  级联删除：当user被删掉时对应的player也会被删除
     user = models.OneToOneField(User, on_delete = models.CASCADE)
     photo = models.URLField(max_length = 256, blank = True)
+    openid = models.CharField(default = "", max_length = 50, blank = True, null = True)
 
     def __str__(self):
         return str(self.user)
