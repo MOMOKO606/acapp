@@ -104,6 +104,8 @@ class Settings{
 
         this.$register.hide();
 
+        this.$google_login = this.$settings.find(".ac-game-settings-google button")
+
         this.root.$ac_game.append(this.$settings);
 
         this.start();
@@ -116,8 +118,13 @@ class Settings{
 
 
     add_listening_events(){
+        let outer = this;
         this.add_listening_events_login();
         this.add_listening_events_register();
+        
+        this.$google_login.click(function(){
+            outer.google_login();
+        });
     }
 
 
@@ -138,6 +145,19 @@ class Settings{
         });
         this.$register_submit.click(function(){
             outer.register_on_remote();
+        });
+    }
+
+    google_login(){
+        $.ajax({
+            url: "https://app6423.acapp.acwing.com.cn/settings/google/web/apply_code/",
+            type: "GET",
+            success: function(resp){
+                console.log(resp);
+                if(resp.result === "success"){
+                    window.location.replace(resp.apply_code_url);
+                }
+            }
         });
     }
 
