@@ -8,6 +8,10 @@ class Settings{
         this.photo = "";
 
         this.$settings = $(`
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+<meta name="google-signin-client_id" content="901762832151-1pb0q2e95m8q2k0cadu1vvchnpj7nv80.apps.googleusercontent.com">
+
 <div class="ac-game-settings">
     <div class="ac-game-settings-login">
         <div class="ac-game-settings-title">
@@ -38,6 +42,9 @@ class Settings{
            <div>
                Sign in with AcWing
            </div>
+        </div>
+        <div class="ac-game-settings-google2">
+            <div class="g-signin2" data-onsuccess="onSignIn"></div>
         </div>
     </div>
 
