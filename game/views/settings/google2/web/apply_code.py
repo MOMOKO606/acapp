@@ -13,7 +13,7 @@ from google_auth_oauthlib.flow import Flow
 def apply_code(request):
     # 定义 OAuth 2.0 凭证的信息
     client_id = "901762832151-1pb0q2e95m8q2k0cadu1vvchnpj7nv80.apps.googleusercontent.com"
-    client_secret = "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"
+    client_secret = ""
     redirect_uri = "https://app6423.acapp.acwing.com.cn/settings/google2/web/receive_code/"
     scope = "profile"
     state = "49217"
