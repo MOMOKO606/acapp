@@ -99,6 +99,7 @@ class Settings{
         this.$register.hide();
 
         this.$google_login = this.$settings.find(".ac-game-settings-google img")
+        this.$google2_login = this.$settings.find(".ac-game-settings-google2 img")
 
         this.root.$ac_game.append(this.$settings);
 
@@ -118,6 +119,10 @@ class Settings{
         
         this.$google_login.click(function(){
             outer.google_login();
+        });
+        
+        this.$google2_login.click(function(){
+            outer.google2_login();
         });
     }
 
@@ -145,6 +150,19 @@ class Settings{
     google_login(){
         $.ajax({
             url: "https://app6423.acapp.acwing.com.cn/settings/google/web/apply_code/",
+            type: "GET",
+            success: function(resp){
+                console.log(resp);
+                if(resp.result === "success"){
+                    window.location.replace(resp.apply_code_url);
+                }
+            }
+        });
+    }
+    
+    google2_login(){
+        $.ajax({
+            url: "https://app6423.acapp.acwing.com.cn/settings/google2/web/apply_code/",
             type: "GET",
             success: function(resp){
                 console.log(resp);
