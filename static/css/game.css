@@ -123,10 +123,21 @@
     height: 7vh;
 }
 
-.ac-game-settings-google2 > div{
+.ac-game-settings-google2 > img{
     position: relative;
     top: 0%;
-    left: 100%;
+    left: 75%;
+    transform: translate(-50%, -50%);
+    cursor: pointer
+
+}
+
+.ac-game-settings-google2 > div{
+    color: white;
+    font-size: 1.5vh;
+    position: relative;
+    top: -10%;
+    left: 108.5%;
     transform: translate(-50%, -50%);
 }
 

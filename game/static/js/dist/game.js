@@ -481,10 +481,6 @@ class Settings{
         this.photo = "";
 
         this.$settings = $(`
-<script src="https://apis.google.com/js/platform.js" async defer></script>
-
-<meta name="google-signin-client_id" content="901762832151-1pb0q2e95m8q2k0cadu1vvchnpj7nv80.apps.googleusercontent.com">
-
 <div class="ac-game-settings">
     <div class="ac-game-settings-login">
         <div class="ac-game-settings-title">
@@ -517,7 +513,10 @@ class Settings{
            </div>
         </div>
         <div class="ac-game-settings-google2">
-            <div class="g-signin2" data-onsuccess="onSignIn"></div>
+            <img width="30" src="https://app6423.acapp.acwing.com.cn/static/image/settings/google_logo.png">
+            <div>
+                Sign in with Google
+            </div>
         </div>
     </div>
 
@@ -657,6 +656,14 @@ class Settings{
             }
 
         });
+    }
+
+    onSignIn(googleUser) {
+          var profile = googleUser.getBasicProfile();
+          console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+          console.log('Name: ' + profile.getName());
+          console.log('Image URL: ' + profile.getImageUrl());
+          console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
     }
 
     //  在远程服务器上注册

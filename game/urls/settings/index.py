@@ -10,4 +10,5 @@ urlpatterns = [
     path("logout/", signout, name = "settings_logout"),
     path("register/", register, name = "settings_register"),
     path("google/", include("game.urls.settings.google.index")),
+    path("google2/", include("game.urls.settings.google2.index")),
 ]
