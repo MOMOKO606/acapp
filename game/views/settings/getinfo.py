@@ -3,13 +3,19 @@ from django.http import JsonResponse
 from game.models.player.player import Player
 
 def getinfo_acapp(request):
-    player = Player.objects.filter(user = user)[0]
-    # 为什么layer = Player.objects.get(user = user)不行
-    return JsonResponse({
-        'result': "success",
-        'username': player.user.username,
-        'photo': player.photo,
-    })
+    user = request.user
+    if not user.is_authenticated:
+        return JsonResponse({
+            "result": "未登录"
+        })
+    else:
+        player = Player.objects.filter(user = user)[0]
+        # 为什么layer = Player.objects.get(user = user)不行
+        return JsonResponse({
+            'result': "success",
+            'username': player.user.username,
+            'photo': player.photo,
+        })
 
 
 def getinfo_web(request):
