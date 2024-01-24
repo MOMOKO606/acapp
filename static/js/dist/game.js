@@ -36,9 +36,11 @@ class AcGameMenu {
         let outer = this;
         this.$single_mode.click(function(){
             outer.hide();
-            outer.root.playground.show();
+            outer.root.playground.show("single mode");
         });
         this.$multi_mode.click(function(){
+            outer.hide();
+            outer.root.playground.show("multi mode");
             console.log("click multi mode");
         });
         this.$settings.click(function(){
@@ -183,7 +185,7 @@ class Particle extends AcGameObject{
     }
 }
 class Player extends AcGameObject{
-    constructor(playground, x, y, radius, color, speed, is_me){
+    constructor(playground, x, y, radius, color, speed, character, username, photo){
         super();  // 实例化基类，理解为把当前对象加到动画中
         this.playground = playground;
         this.ctx = this.playground.game_map.ctx;
@@ -198,7 +200,9 @@ class Player extends AcGameObject{
         this.radius = radius;
         this.color = color;
         this.speed = speed;
-        this.is_me = is_me;
+        this.character = character;
+        this.username = username;
+        this.photo = photo;
         this.is_dead = false;
         this.countdown = 0;
         //  被击中后减速效果
@@ -208,15 +212,15 @@ class Player extends AcGameObject{
         //  当前技能
         this.cur_skill = null;
 
-        if(this.is_me){
+        if(this.character !== "robot"){
             this.img = new Image();
-            this.img.src = this.playground.root.settings.photo;
+            this.img.src = this.photo;
         }
     }
 
     start(){
         //  如果这个player是本机，则需要监听鼠标。
-        if(this.is_me){
+        if(this.character === "me"){
             this.add_listening_events();
         }else{
             let tx = Math.random() * this.playground.width / this.playground.scale;
@@ -325,7 +329,7 @@ class Player extends AcGameObject{
         //  累加时间
         this.countdown += this.timedelta / 1000;
         //  给一定的概率随机攻击
-        if(!this.is_me && this.countdown > 5 && Math.random() < 1 / 360.0){
+        if(!this.character === "robot" && this.countdown > 5 && Math.random() < 1 / 360.0){
             let player = this.playground.players[Math.floor(Math.random() * this.playground.players.length)];
             this.shoot_fireball(player.x, player.y);
         }
@@ -340,7 +344,7 @@ class Player extends AcGameObject{
             if(this.move_length < this.eps){
                 this.move_length = 0;
                 this.vx = this.vy = 0;
-                if(!this.is_me){
+                if(!this.character === "robot"){
                     let tx = Math.random() * this.playground.width / this.playground.scale;
                     let ty = Math.random() * this.playground.height / this.playground.scale;
                     this.move_to(tx, ty);
@@ -357,7 +361,7 @@ class Player extends AcGameObject{
 
     render(){
         let scale = this.playground.scale;
-        if(this.is_me){
+        if(this.character !== "robot"){
             this.ctx.save();
             this.ctx.beginPath();
             this.ctx.arc(this.x * scale, this.y * scale, this.radius * scale, 0, Math.PI * 2, false);
@@ -477,18 +481,22 @@ class AcGamePlayground{
         if(this.game_map) this.game_map.resize();
     }
 
-    show(){
+    show(mode){
         this.$playground.show(); // 显示这个$playground对象
-
-        this.resize();
-
         this.width = this.$playground.width();
         this.height = this.$playground.height();
         this.game_map = new GameMap(this);
+        
+        this.resize();
+
         this.players = [];
-        this.players.push(new Player(this, this.width / 2 / this.scale, 0.5, 0.05, "white", 0.25, true));
-        for(let i = 0; i < 5; i++){
-            this.players.push(new Player(this, this.width / 2 / this.scale, 0.5, 0.05, this.get_random_color(), 0.15, false));
+        this.players.push(new Player(this, this.width / 2 / this.scale, 0.5, 0.05, "white", 0.25, "me", this.root.settings.username, this.root.settings.photo));
+
+        if(mode === "single mode"){
+            for(let i = 0; i < 5; i++){
+                this.players.push(new Player(this, this.width / 2 / this.scale, 0.5, 0.05, this.get_random_color(), 0.15, "robot"));
+            }
+        } else if(mode === "multi mode"){
         }
     }
 
