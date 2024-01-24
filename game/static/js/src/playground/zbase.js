@@ -4,6 +4,8 @@ class AcGamePlayground{
         this.$playground = $(`<div class="ac-game-playground"></div>`); // HTML对象
 
         this.hide();
+        this.root.$ac_game.append(this.$playground); // 将这个HTML对象加入到HTML对象$ac_game
+
         this.start();
     }
 
@@ -19,10 +21,22 @@ class AcGamePlayground{
    //         outer.root.$menu.show(); // 显示$menu
    //     });
    // }
+    resize(){
+        this.width = this.$playground.width();
+        this.height = this.$playground.height();
+        let unit = Math.min(this.width / 16, this.height / 9);
+        this.width = unit * 16;
+        this.height = unit * 9;
+        this.scale = this.height  // scale表示单位1，当画布尺寸变化时，所有内容都应随之变化
+
+        if(this.game_map) this.game_map.resize();
+    }
 
     show(){
         this.$playground.show(); // 显示这个$playground对象
-        this.root.$ac_game.append(this.$playground); // 将这个HTML对象加入到HTML对象$ac_game
+
+        this.resize();
+
         this.width = this.$playground.width();
         this.height = this.$playground.height();
         this.game_map = new GameMap(this);
@@ -39,6 +53,11 @@ class AcGamePlayground{
 
     start(){
         //this.add_listening_events(); // 开启监听
+        let outer = this;
+        //  每当用户改变窗口大小时，都会触发window.resize函数
+        $(window).resize(function(){
+            outer.resize();
+        });
     }
 }
 
