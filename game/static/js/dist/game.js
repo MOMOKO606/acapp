@@ -447,6 +447,19 @@ class FireBall extends AcGameObject{
         this.ctx.fill();
     }
 }
+class MultiPlayerSocket{
+    constructor(playground){
+        this.playground = playground;
+
+        // 建立连接
+        this.ws = new WebSocket("wss://app6423.acapp.acwing.com.cn/wss/multiplayer/")
+        this.start();
+    }
+
+    start(){
+    }
+
+}
 class AcGamePlayground{
     constructor(root){
         this.root = root;
@@ -497,6 +510,7 @@ class AcGamePlayground{
                 this.players.push(new Player(this, this.width / 2 / this.scale, 0.5, 0.05, this.get_random_color(), 0.15, "robot"));
             }
         } else if(mode === "multi mode"){
+            this.mps = new MultiPlayerSocket(this);
         }
     }
 
