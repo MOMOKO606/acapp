@@ -10,4 +10,10 @@ class MultiPlayerSocket{
     start(){
     }
 
+    send_create_player(){
+        this.ws.send(JSON.stringify({
+            "message": "hello acapp server",
+        }));
+    }
+
 }

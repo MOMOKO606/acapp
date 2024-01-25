@@ -459,6 +459,12 @@ class MultiPlayerSocket{
     start(){
     }
 
+    send_create_player(){
+        this.ws.send(JSON.stringify({
+            "message": "hello acapp server",
+        }));
+    }
+
 }
 class AcGamePlayground{
     constructor(root){
@@ -495,6 +501,7 @@ class AcGamePlayground{
     }
 
     show(mode){
+        let outer = this;
         this.$playground.show(); // 显示这个$playground对象
         this.width = this.$playground.width();
         this.height = this.$playground.height();
@@ -510,7 +517,12 @@ class AcGamePlayground{
                 this.players.push(new Player(this, this.width / 2 / this.scale, 0.5, 0.05, this.get_random_color(), 0.15, "robot"));
             }
         } else if(mode === "multi mode"){
-            this.mps = new MultiPlayerSocket(this);
+            this.mps = new MultiPlayerSocket(this);  // 创建ws连接
+
+            //  当ws连接成功时，调用onopen函数
+            this.mps.ws.onopen = function(){
+                outer.mps.send_create_player();
+            };
         }
     }
 
