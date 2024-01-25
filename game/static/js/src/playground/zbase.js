@@ -51,7 +51,7 @@ class AcGamePlayground{
         } else if(mode === "multi mode"){
             this.mps = new MultiPlayerSocket(this);  // 创建ws连接
 
-            //  当ws连接成功时，调用onopen函数
+            //  当ws连接创建成功时，回调onopen函数
             this.mps.ws.onopen = function(){
                 outer.mps.send_create_player();
             };
