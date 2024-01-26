@@ -197,6 +197,9 @@ class Particle extends AcGameObject{
 }
 class Player extends AcGameObject{
     constructor(playground, x, y, radius, color, speed, character, username, photo){
+
+        console.log(character, username, photo);
+
         super();  // 实例化基类，理解为把当前对象加到动画中
         this.playground = playground;
         this.ctx = this.playground.game_map.ctx;
@@ -233,7 +236,7 @@ class Player extends AcGameObject{
         //  如果这个player是本机，则需要监听鼠标。
         if(this.character === "me"){
             this.add_listening_events();
-        }else{
+        }else if(this.character === "robot"){
             let tx = Math.random() * this.playground.width / this.playground.scale;
             let ty = Math.random() * this.playground.height / this.playground.scale;
             this.move_to(tx, ty);
@@ -468,17 +471,47 @@ class MultiPlayerSocket{
     }
 
     start(){
+        this.receive();
     }
 
-    send_create_player(){
+    receive(){
+        let outer = this;
+        this.ws.onmessage = function(e){
+            let data = JSON.parse(e.data);
+            let uuid = data.uuid;
+            if(uuid === outer.uuid) return false;
+
+            let event = data.event;
+            if (event === "create_player"){
+                outer.receive_create_player(uuid, data.username, data.photo);
+            }
+        };
+    }
+
+    send_create_player(username, photo){
         let outer = this;
         this.ws.send(JSON.stringify({
             "event": "create_player",
             "uuid": outer.uuid,
+            "username": username,
+            "photo": photo,
         }));
     }
 
-    receive_create_player(){
+    receive_create_player(uuid, username, photo){
+        let player = new Player(
+            this.playground,
+            this.playground.width / 2 / this.playground.scale,
+            0.5,
+            0.05,
+            "white",
+            0.25,
+            "enemy",
+            username,
+            photo,
+        );
+        player.uuid = uuid;
+        this.playground.players.push(player);
     }
 
 }
@@ -538,7 +571,7 @@ class AcGamePlayground{
 
             //  当ws连接创建成功时，回调onopen函数
             this.mps.ws.onopen = function(){
-                outer.mps.send_create_player();
+                outer.mps.send_create_player(outer.root.settings.username, outer.root.settings.photo);
             };
         }
     }

@@ -1,5 +1,8 @@
 class Player extends AcGameObject{
     constructor(playground, x, y, radius, color, speed, character, username, photo){
+
+        console.log(character, username, photo);
+
         super();  // 实例化基类，理解为把当前对象加到动画中
         this.playground = playground;
         this.ctx = this.playground.game_map.ctx;
@@ -36,7 +39,7 @@ class Player extends AcGameObject{
         //  如果这个player是本机，则需要监听鼠标。
         if(this.character === "me"){
             this.add_listening_events();
-        }else{
+        }else if(this.character === "robot"){
             let tx = Math.random() * this.playground.width / this.playground.scale;
             let ty = Math.random() * this.playground.height / this.playground.scale;
             this.move_to(tx, ty);

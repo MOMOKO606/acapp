@@ -54,7 +54,7 @@ class AcGamePlayground{
 
             //  当ws连接创建成功时，回调onopen函数
             this.mps.ws.onopen = function(){
-                outer.mps.send_create_player();
+                outer.mps.send_create_player(outer.root.settings.username, outer.root.settings.photo);
             };
         }
     }
