@@ -67,8 +67,6 @@ class AcGameObject{
         // 当前帧距离上一帧的时间间隔ms
         this.timedelta = 0;
         this.uuid = this.create_uuid();
-
-        console.log(this.uuid);
     }
 
     create_uuid(){
@@ -342,7 +340,7 @@ class Player extends AcGameObject{
         //  累加时间
         this.countdown += this.timedelta / 1000;
         //  给一定的概率随机攻击
-        if(!this.character === "robot" && this.countdown > 5 && Math.random() < 1 / 360.0){
+        if(this.character === "robot" && this.countdown > 5 && Math.random() < 1 / 360.0){
             let player = this.playground.players[Math.floor(Math.random() * this.playground.players.length)];
             this.shoot_fireball(player.x, player.y);
         }
@@ -357,7 +355,7 @@ class Player extends AcGameObject{
             if(this.move_length < this.eps){
                 this.move_length = 0;
                 this.vx = this.vy = 0;
-                if(!this.character === "robot"){
+                if(this.character === "robot"){
                     let tx = Math.random() * this.playground.width / this.playground.scale;
                     let ty = Math.random() * this.playground.height / this.playground.scale;
                     this.move_to(tx, ty);
@@ -473,9 +471,14 @@ class MultiPlayerSocket{
     }
 
     send_create_player(){
+        let outer = this;
         this.ws.send(JSON.stringify({
-            "message": "hello acapp server",
+            "event": "create_player",
+            "uuid": outer.uuid,
         }));
+    }
+
+    receive_create_player(){
     }
 
 }
@@ -531,6 +534,7 @@ class AcGamePlayground{
             }
         } else if(mode === "multi mode"){
             this.mps = new MultiPlayerSocket(this);  // 创建ws连接
+            this.mps.uuid = this.players[0].uuid;  // 令mps自己的uuid就是玩家本身的uuid
 
             //  当ws连接创建成功时，回调onopen函数
             this.mps.ws.onopen = function(){

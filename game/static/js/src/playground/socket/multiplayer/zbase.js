@@ -11,9 +11,14 @@ class MultiPlayerSocket{
     }
 
     send_create_player(){
+        let outer = this;
         this.ws.send(JSON.stringify({
-            "message": "hello acapp server",
+            "event": "create_player",
+            "uuid": outer.uuid,
         }));
+    }
+
+    receive_create_player(){
     }
 
 }

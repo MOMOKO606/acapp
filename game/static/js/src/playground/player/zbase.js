@@ -143,7 +143,7 @@ class Player extends AcGameObject{
         //  累加时间
         this.countdown += this.timedelta / 1000;
         //  给一定的概率随机攻击
-        if(!this.character === "robot" && this.countdown > 5 && Math.random() < 1 / 360.0){
+        if(this.character === "robot" && this.countdown > 5 && Math.random() < 1 / 360.0){
             let player = this.playground.players[Math.floor(Math.random() * this.playground.players.length)];
             this.shoot_fireball(player.x, player.y);
         }
@@ -158,7 +158,7 @@ class Player extends AcGameObject{
             if(this.move_length < this.eps){
                 this.move_length = 0;
                 this.vx = this.vy = 0;
-                if(!this.character === "robot"){
+                if(this.character === "robot"){
                     let tx = Math.random() * this.playground.width / this.playground.scale;
                     let ty = Math.random() * this.playground.height / this.playground.scale;
                     this.move_to(tx, ty);

@@ -50,6 +50,7 @@ class AcGamePlayground{
             }
         } else if(mode === "multi mode"){
             this.mps = new MultiPlayerSocket(this);  // 创建ws连接
+            this.mps.uuid = this.players[0].uuid;  // 令mps自己的uuid就是玩家本身的uuid
 
             //  当ws连接创建成功时，回调onopen函数
             this.mps.ws.onopen = function(){
