@@ -1,8 +1,6 @@
 class Player extends AcGameObject{
     constructor(playground, x, y, radius, color, speed, character, username, photo){
 
-        console.log(character, username, photo);
-
         super();  // 实例化基类，理解为把当前对象加到动画中
         this.playground = playground;
         this.ctx = this.playground.game_map.ctx;

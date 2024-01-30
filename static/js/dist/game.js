@@ -41,10 +41,8 @@ class AcGameMenu {
         this.$multi_mode.click(function(){
             outer.hide();
             outer.root.playground.show("multi mode");
-            console.log("click multi mode");
         });
         this.$settings.click(function(){
-            console.log("click settings");
             outer.root.settings.logout_on_remote();
         });
     }
@@ -197,8 +195,6 @@ class Particle extends AcGameObject{
 }
 class Player extends AcGameObject{
     constructor(playground, x, y, radius, color, speed, character, username, photo){
-
-        console.log(character, username, photo);
 
         super();  // 实例化基类，理解为把当前对象加到动画中
         this.playground = playground;
@@ -713,11 +709,11 @@ class Settings{
         let outer = this;
         this.add_listening_events_login();
         this.add_listening_events_register();
-        
+
         this.$google_login.click(function(){
             outer.google_login();
         });
-        
+
         this.$google2_login.click(function(){
             outer.google2_login();
         });
@@ -749,20 +745,18 @@ class Settings{
             url: "https://app6423.acapp.acwing.com.cn/settings/google/web/apply_code/",
             type: "GET",
             success: function(resp){
-                console.log(resp);
                 if(resp.result === "success"){
                     window.location.replace(resp.apply_code_url);
                 }
             }
         });
     }
-    
+
     google2_login(){
         $.ajax({
             url: "https://app6423.acapp.acwing.com.cn/settings/google2/web/apply_code/",
             type: "GET",
             success: function(resp){
-                console.log(resp);
                 if(resp.result === "success"){
                     window.location.replace(resp.apply_code_url);
                 }
@@ -786,7 +780,6 @@ class Settings{
                 password: password,
             },
             success: function(resp){
-                console.log(resp);
                 //  如果登录成功就原地刷新（cookie会记录登录成功）
                 //  则刷新后会通过getinfo获取信息，进而加载menu
                 //  登录成功直接刷新的模式和第三方授权一致
@@ -801,11 +794,11 @@ class Settings{
     }
 
     onSignIn(googleUser) {
-          var profile = googleUser.getBasicProfile();
-          console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-          console.log('Name: ' + profile.getName());
-          console.log('Image URL: ' + profile.getImageUrl());
-          console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+        var profile = googleUser.getBasicProfile();
+        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+        console.log('Name: ' + profile.getName());
+        console.log('Image URL: ' + profile.getImageUrl());
+        console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
     }
 
     //  在远程服务器上注册
@@ -825,7 +818,6 @@ class Settings{
                 password_confirm: password_confirm,
             },
             success:  function(resp){
-                console.log(resp);
                 if(resp.result === "success"){
                     location.reload();
                 }else{
@@ -837,18 +829,20 @@ class Settings{
 
     //  在远程服务器上登出
     logout_on_remote(){
-        if(this.platform === "ACAPP") return false;
-
-        $.ajax({
-            url: "https://app6423.acapp.acwing.com.cn/settings/logout/",
-            type: "GET",
-            success: function(resp){
-                console.log(resp);
-                if(resp.result === "success"){
-                    location.reload();
+        if(this.platform === "ACAPP"){
+            //  调用api关闭窗口
+            this.root.AcWingOS.api.window.close();
+        }else{
+            $.ajax({
+                url: "https://app6423.acapp.acwing.com.cn/settings/logout/",
+                type: "GET",
+                success: function(resp){
+                    if(resp.result === "success"){
+                        location.reload();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
 
@@ -867,8 +861,6 @@ class Settings{
     acapp_login(appid, redirect_uri, scope, state){
         let outer = this;
         this.root.AcWingOS.api.oauth2.authorize(appid, redirect_uri, scope, state, function(resp){
-            console.log("called from acapp_login function");
-            console.log(resp);
             if (resp.result === "success"){
                 outer.username = resp.username;
                 outer.photo = resp.photo;
@@ -902,7 +894,6 @@ class Settings{
                 platform: outer.platform,
             },
             success: function(resp){
-                console.log(resp);
                 if(resp.result === "success"){
                     outer.username = resp.username;
                     outer.photo = resp.photo;
@@ -926,7 +917,6 @@ class Settings{
 }
 export class AcGame{
    constructor(id, AcWingOS){
-       console.log(AcWingOS);
        this.id = id;
        this.$ac_game = $('#' + id);
        this.AcWingOS = AcWingOS;
