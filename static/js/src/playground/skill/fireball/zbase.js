@@ -25,7 +25,12 @@ class FireBall extends AcGameObject{
             return false;
         }
         this.update_move();
-        this.update_attack();
+        
+        //  为了提升体验，只在攻击发起player的窗口判断是否击中
+        if(this.player.character != "enemy"){
+            this.update_attack();
+        }
+
         this.render();
     }
 
@@ -63,6 +68,10 @@ class FireBall extends AcGameObject{
     attack(player){
         let angle = Math.atan2(player.y - this.y, player.x - this.x);
         player.is_attacked(angle, this.damage);
+
+        if(this.playground.mode === "multi mode"){
+            this.playground.mps.send_attack(player.uuid, player.x, player.y, angle, this.damage, this.uuid);
+        }
         //  火球消失
         this.destroy();
     }

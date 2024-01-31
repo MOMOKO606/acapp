@@ -26,7 +26,7 @@ class MultiPlayer(AsyncWebsocketConsumer):
         #  如果房间是新建的，要在redis里创建出来
         if not cache.has_key(self.room_name):
             cache.set(self.room_name, [], 3600)  # 有效期1小时
-        
+
         #  遍历当前已有玩家
         for player in cache.get(self.room_name):
             await self.send(text_data = json.dumps({
@@ -36,7 +36,7 @@ class MultiPlayer(AsyncWebsocketConsumer):
                 "photo": player["photo"],
                 }))
 
-        await self.channel_layer.group_add(self.room_name, self.channel_name)
+            await self.channel_layer.group_add(self.room_name, self.channel_name)
         #  从redis中找出当前对局中的所有玩家
         players = cache.get(self.room_name)
         players.append({
@@ -49,14 +49,14 @@ class MultiPlayer(AsyncWebsocketConsumer):
         await self.channel_layer.group_send(
                 self.room_name,
                 {"type": "group_send_event", #  每个玩家接收广播的函数名
-                 "event": "create_player",
-                 "uuid": data["uuid"],
-                 "username": data["username"],
-                 "photo": data["photo"],
-                }
-        )
+                    "event": "create_player",
+                    "uuid": data["uuid"],
+                    "username": data["username"],
+                    "photo": data["photo"],
+                    }
+                )
 
-    #  每个玩家接收广播的函数
+        #  每个玩家接收广播的函数
     async def group_send_event(self, data):
         #  将信息发送到前端
         await self.send(text_data = json.dumps(data))
@@ -65,24 +65,40 @@ class MultiPlayer(AsyncWebsocketConsumer):
         await self.channel_layer.group_send(
                 self.room_name,
                 {"type": "group_send_event",
-                 "event": "move_to",
-                 "uuid": data["uuid"],
-                 "tx": data["tx"],
-                 "ty": data["ty"],
-                }
+                "event": "move_to",
+                "uuid": data["uuid"],
+                "tx": data["tx"],
+                "ty": data["ty"],
+            }
         )
 
     async def shoot_fireball(self, data):
         await self.channel_layer.group_send(
-            self.room_name,
-            {"type": "group_send_event",
-             "event": "shoot_fireball",
-             "uuid": data["uuid"],
-             "tx": data["tx"],
-             "ty": data["ty"],
-             "ball_uuid": data["ball_uuid"],
+                self.room_name,
+                {"type": "group_send_event",
+                "event": "shoot_fireball",
+                "uuid": data["uuid"],
+                "tx": data["tx"],
+                "ty": data["ty"],
+                "ball_uuid": data["ball_uuid"],
             }
         )
+
+    async def attack(self, data):
+        await self.channel_layer.group_send(
+                self.room_name,
+                {"type": "group_send_event",
+                "event": "attack",
+                "uuid": data["uuid"],
+                "attackee": data["attackee_uuid"],
+                "x": data["x"],
+                "y": data["y"],
+                "angle": data["angle"],
+                "damage": data["damage"],
+                "ball_uuid": data["ball_uuid"],
+                }
+        )
+
 
 
     async def receive(self, text_data):
@@ -94,4 +110,6 @@ class MultiPlayer(AsyncWebsocketConsumer):
             await self.move_to(data)
         elif event == "shoot_fireball":
             await self.shoot_fireball(data)
+        elif event == "attack":
+            await self.attack(data)
 
