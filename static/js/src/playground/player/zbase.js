@@ -37,6 +37,12 @@ class Player extends AcGameObject{
     start(){
         this.playground.player_count ++;
         this.playground.notice_board.write("Ready to Play:  " + this.playground.player_count + " Player(s)");
+
+        if(this.playground.player_count >= 3){
+            this.playground.state = "fighting";
+            this.playground.notice_board.write("Fighting");
+        }
+
         //  如果这个player是本机，则需要监听鼠标。
         if(this.character === "me"){
             this.add_listening_events();
@@ -57,6 +63,7 @@ class Player extends AcGameObject{
         //  e == 1为鼠标左键
         //  e == 2为鼠标滚轮
         this.playground.game_map.$canvas.mousedown(function(e){
+            if(outer.playground.state !== "fighting") return false;
             const rect = outer.ctx.canvas.getBoundingClientRect();
             if(e.which === 3){
                 //  注意这里不能用this, 因为this会表示这个function自己.
@@ -81,6 +88,7 @@ class Player extends AcGameObject{
         });
 
         $(window).keydown(function(e){
+            if(outer.playground.state !== "fighting") return false;
             //  q键
             if(e.which === 81){
                 outer.cur_skill = "fireball";
