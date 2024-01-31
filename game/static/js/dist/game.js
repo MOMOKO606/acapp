@@ -254,6 +254,11 @@ class Player extends AcGameObject{
             this.img = new Image();
             this.img.src = this.photo;
         }
+
+        if(this.character === "me"){
+            //  限制本地client的技能冷却时间为3秒
+            this.fireball_coldtime = 3;
+        }
     }
 
     start(){
@@ -296,6 +301,7 @@ class Player extends AcGameObject{
                     outer.playground.mps.send_move_to(tx, ty);
                 }
             }else if(e.which === 1){
+                if(outer.fireball_coldtime > outer.eps) return false;
                 let tx = (e.clientX - rect.left) / outer.playground.scale;
                 let ty = (e.clientY - rect.top) / outer.playground.scale;
                 if(outer.cur_skill === "fireball"){
@@ -311,6 +317,8 @@ class Player extends AcGameObject{
 
         $(window).keydown(function(e){
             if(outer.playground.state !== "fighting") return false;
+
+            if(outer.fireball_coldtime > outer.eps) return false;
             //  q键
             if(e.which === 81){
                 outer.cur_skill = "fireball";
@@ -396,14 +404,26 @@ class Player extends AcGameObject{
     }
 
     update(){
+        //  累加时间
+        this.countdown += this.timedelta / 1000;
+
+        if(this.character === "me" && this.playground.state === "fighting"){
+            this.update_coldtime();
+        }
         this.update_move();
+
         this.render();
+    }
+
+    update_coldtime(){
+        this.fireball_coldtime -= this.timedelta / 1000;
+        this.fireball_coldtime = Math.max(this.fireball_coldtime, 0);
+
+        console.log(this.fireball_coldtime);
     }
 
     //  更新玩家移动
     update_move(){
-        //  累加时间
-        this.countdown += this.timedelta / 1000;
         //  给一定的概率随机攻击
         if(this.character === "robot" && this.countdown > 5 && Math.random() < 1 / 360.0){
             let player = this.playground.players[Math.floor(Math.random() * this.playground.players.length)];
