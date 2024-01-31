@@ -123,7 +123,6 @@ class MultiPlayerSocket{
     receive_attack(uuid, attackee_uuid, x, y, angle, damage, ball_uuid){
         let attacker = this.get_player(uuid);
         let attackee = this.get_player(attackee_uuid);
-        console.log("print from mps.receive_attack", attacker, attackee_uuid);
         if(attacker && attackee){
             attackee.receive_attack(x, y, angle, damage, ball_uuid, attacker);
         }

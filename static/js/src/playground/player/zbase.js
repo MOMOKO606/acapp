@@ -35,6 +35,8 @@ class Player extends AcGameObject{
     }
 
     start(){
+        this.playground.player_count ++;
+        this.playground.notice_board.write("Ready to Play:  " + this.playground.player_count + " Player(s)");
         //  如果这个player是本机，则需要监听鼠标。
         if(this.character === "me"){
             this.add_listening_events();

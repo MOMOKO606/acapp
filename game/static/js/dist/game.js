@@ -152,6 +152,33 @@ class GameMap extends AcGameObject{
         this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     }
 }
+class NoticeBoard extends AcGameObject{
+    constructor(playground){
+        super();
+
+        this.playground = playground;
+        this.ctx = this.playground.game_map.ctx;
+        this.text = "Ready to Play:  0 Player(s)";
+    }
+
+    start(){
+    }
+
+    write(text){
+        this.text = text;
+    }
+
+    update(){
+        this.render();
+    }
+
+    render(){
+        this.ctx.font = "20px serif";
+        this.ctx.fillStyle = "white";
+        this.ctx.textAlign = "center";
+        this.ctx.fillText(this.text, this.playground.width / 2, 20);
+    }
+}
 class Particle extends AcGameObject{
     constructor(playground, x, y, radius, vx, vy, color, speed, move_length){
         super();
@@ -230,6 +257,8 @@ class Player extends AcGameObject{
     }
 
     start(){
+        this.playground.player_count ++;
+        this.playground.notice_board.write("Ready to Play:  " + this.playground.player_count + " Player(s)");
         //  如果这个player是本机，则需要监听鼠标。
         if(this.character === "me"){
             this.add_listening_events();
@@ -545,8 +574,6 @@ class MultiPlayerSocket{
             let uuid = data.uuid;
             if(uuid === outer.uuid) return false;
 
-            console.log("print from mps.receive function", data);
-
             let event = data.event;
             if (event === "create_player"){
                 outer.receive_create_player(uuid, data.username, data.photo);
@@ -652,7 +679,6 @@ class MultiPlayerSocket{
     receive_attack(uuid, attackee_uuid, x, y, angle, damage, ball_uuid){
         let attacker = this.get_player(uuid);
         let attackee = this.get_player(attackee_uuid);
-        console.log("print from mps.receive_attack", attacker, attackee_uuid);
         if(attacker && attackee){
             attackee.receive_attack(x, y, angle, damage, ball_uuid, attacker);
         }
@@ -701,6 +727,10 @@ class AcGamePlayground{
         this.game_map = new GameMap(this);
         
         this.mode = mode;
+        this.state = "waiting"; //waiting -> fighting -> over
+        this.notice_board = new NoticeBoard(this);
+        this.player_count = 0;
+
         this.resize();
 
         this.players = [];
