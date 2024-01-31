@@ -5,7 +5,16 @@ from django.core.cache import cache
 
 class MultiPlayer(AsyncWebsocketConsumer):
     async def connect(self):
+        await self.accept()
+
+
+    async def disconnect(self, close_code):
+        print('disconnect')
+        await self.channel_layer.group_discard(self.room_name, self.channel_name)
+
+    async def create_player(self, data):
         self.room_name = None
+
         for i in range(1000):
             name = "room-%d" % (i)
             if not cache.has_key(name) or len(cache.get(name)) < settings.ROOM_CAPACITY:
@@ -13,8 +22,6 @@ class MultiPlayer(AsyncWebsocketConsumer):
                 break
         #  房间满了，不要再新建房间了
         if not self.room_name: return
-
-        await self.accept()
 
         #  如果房间是新建的，要在redis里创建出来
         if not cache.has_key(self.room_name):
@@ -30,12 +37,6 @@ class MultiPlayer(AsyncWebsocketConsumer):
                 }))
 
         await self.channel_layer.group_add(self.room_name, self.channel_name)
-
-    async def disconnect(self, close_code):
-        print('disconnect')
-        await self.channel_layer.group_discard(self.room_name, self.channel_name)
-
-    async def create_player(self, data):
         #  从redis中找出当前对局中的所有玩家
         players = cache.get(self.room_name)
         players.append({
