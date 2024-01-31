@@ -545,6 +545,8 @@ class MultiPlayerSocket{
             let uuid = data.uuid;
             if(uuid === outer.uuid) return false;
 
+            console.log("print from mps.receive function", data);
+
             let event = data.event;
             if (event === "create_player"){
                 outer.receive_create_player(uuid, data.username, data.photo);
@@ -553,7 +555,7 @@ class MultiPlayerSocket{
             }else if(event === "shoot_fireball"){
                 outer.receive_shoot_fireball(uuid, data.tx, data.ty, data.ball_uuid);
             }else if(event === "attack"){
-                outer.receive_attack(uuid, data.attack_uuid, data.x, data.y, data.angle, data.damage, data.ball);
+                outer.receive_attack(uuid, data.attackee_uuid, data.x, data.y, data.angle, data.damage, data.ball_uuid);
             }
         };
     }
@@ -647,11 +649,12 @@ class MultiPlayerSocket{
         }));
     }
 
-    receive_attack(uuid, sttackee_uuid, x, y, angle, damage, ball_uuid){
+    receive_attack(uuid, attackee_uuid, x, y, angle, damage, ball_uuid){
         let attacker = this.get_player(uuid);
         let attackee = this.get_player(attackee_uuid);
+        console.log("print from mps.receive_attack", attacker, attackee_uuid);
         if(attacker && attackee){
-            attackee.receive_attack(x, y, angle, damage, ball_uuid, sttacker);
+            attackee.receive_attack(x, y, angle, damage, ball_uuid, attacker);
         }
     }
 

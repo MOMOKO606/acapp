@@ -36,7 +36,7 @@ class MultiPlayer(AsyncWebsocketConsumer):
                 "photo": player["photo"],
                 }))
 
-            await self.channel_layer.group_add(self.room_name, self.channel_name)
+        await self.channel_layer.group_add(self.room_name, self.channel_name)
         #  从redis中找出当前对局中的所有玩家
         players = cache.get(self.room_name)
         players.append({
@@ -90,7 +90,7 @@ class MultiPlayer(AsyncWebsocketConsumer):
                 {"type": "group_send_event",
                 "event": "attack",
                 "uuid": data["uuid"],
-                "attackee": data["attackee_uuid"],
+                "attackee_uuid": data["attackee_uuid"],
                 "x": data["x"],
                 "y": data["y"],
                 "angle": data["angle"],
