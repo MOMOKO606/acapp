@@ -35,7 +35,8 @@ class Player extends AcGameObject{
 
         if(this.character === "me"){
             //  限制本地client的技能冷却时间为3秒
-            this.fireball_coldtime = 3;
+            this.fireball_coldtime_total = 3;
+            this.fireball_coldtime = this.fireball_coldtime_total;
             this.fireball_img = new Image();
             this.fireball_img.src = "https://cdn.acwing.com/media/article/image/2021/12/02/1_9340c86053-fireball.png";
         }
@@ -124,7 +125,8 @@ class Player extends AcGameObject{
         let fireball = new FireBall(this.playground, this, x, y, radius, vx, vy, color, speed, move_length, 0.0125);
         this.fireballs.push(fireball);
 
-        this.fireball_coldtime = 1;
+        this.fireball_coldtime_total = 1
+        this.fireball_coldtime = this.fireball_coldtime_total;
 
         return fireball;
     }
@@ -269,6 +271,12 @@ class Player extends AcGameObject{
         this.ctx.clip();
         this.ctx.drawImage(this.fireball_img, (x - r) * scale, (y - r) * scale, r * 2 * scale, r * 2 * scale);
         this.ctx.restore();
+        //  旋转画圆
+        this.ctx.beginPath();
+        this.ctx.moveTo(x * scale, y * scale);
+        this.ctx.arc(x * scale, y * scale, r * scale, 0, Math.PI * 2 * this.fireball_coldtime / this.fireball_coldtime_total, false);
+        this.ctx.fillStyle = "rgba(0, 0, 255, 0.6)";
+        this.ctx.fill();
     }
 
     on_destroy(){
