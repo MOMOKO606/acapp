@@ -110,13 +110,14 @@ class Player extends AcGameObject{
             //  return退出function，return true不会令键盘失效，return false会令键盘失效。
             if(outer.playground.state !== "fighting") return true;
 
-            if(outer.fireball_coldtime > outer.eps) return true;
             //  q键
             if(e.which === 81){
+                if (outer.fireball_coldtime > outer.eps) return true;
                 outer.cur_skill = "fireball";
                 return false;
             //  f键
             } else if (e.which === 70) {
+                if (outer.blink_coldtime > outer.eps) return true;
                 outer.cur_skill = "blink";
                 return false;
             }
@@ -162,6 +163,13 @@ class Player extends AcGameObject{
         d = Math.min(d, 0.8);
         this.x += d * Math.cos(angle);
         this.y += d * Math.sin(angle);
+        
+        // blink后技能冷却
+        this.blink_coldtime_total = 3
+        this.blink_coldtime = this.blink_coldtime_total;
+
+        // blink后停留在原地
+        this.move_length = 0;
     }
 
     get_dist(x1, y1, x2, y2){
