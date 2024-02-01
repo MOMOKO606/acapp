@@ -100,6 +100,9 @@ class Player extends AcGameObject{
                 }else if (outer.cur_skill === "blink") {
                     if (outer.blink_coldtime > outer.eps) return false;
                     outer.blink(tx, ty);
+                    if (outer.playground.mode === "multi mode"){
+                        outer.playground.mps.send_blink(tx, ty);
+                    }
                 }
                 //  技能释放结束后应重置cur skill
                 outer.cur_skill = null;
@@ -336,6 +339,7 @@ class Player extends AcGameObject{
     }
 
     on_destroy(){
+        if(this.character === "me") this.playground.state = "over";
         for(let i = 0; i < this.playground.players.length; i++){
             if(this.playground.players[i] === this){
                 this.playground.players.splice(i, 1);
