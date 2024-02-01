@@ -34,11 +34,18 @@ class Player extends AcGameObject{
         }
 
         if(this.character === "me"){
-            //  限制本地client的技能冷却时间为3秒
+            //  限制本地client的fireball冷却时间
+            //  fireball_coldtime_total为总的冷却时间（单位：秒）
+            //  fireball_coldtime为当前实时冷却时间
             this.fireball_coldtime_total = 3;
             this.fireball_coldtime = this.fireball_coldtime_total;
             this.fireball_img = new Image();
             this.fireball_img.src = "https://cdn.acwing.com/media/article/image/2021/12/02/1_9340c86053-fireball.png";
+
+            this.blink_coldtime_total = 5;
+            this.blink_coldtime = this.blink_coldtime_total;
+            this.blink_img = new Image();
+            this.blink_img.src = "https://cdn.acwing.com/media/article/image/2021/12/02/1_daccabdc53-blink.png";
         }
     }
 
@@ -82,14 +89,17 @@ class Player extends AcGameObject{
                     outer.playground.mps.send_move_to(tx, ty);
                 }
             }else if(e.which === 1){
-                if(outer.fireball_coldtime > outer.eps) return false;
                 let tx = (e.clientX - rect.left) / outer.playground.scale;
                 let ty = (e.clientY - rect.top) / outer.playground.scale;
                 if(outer.cur_skill === "fireball"){
+                    if(outer.fireball_coldtime > outer.eps) return false;
                     let fireball = outer.shoot_fireball(tx, ty);
                     if(outer.playground.mode === "multi mode"){
                         outer.playground.mps.send_shoot_fireball(tx, ty, fireball.uuid);
                     }
+                }else if (outer.cur_skill === "blink") {
+                    if (outer.blink_coldtime > outer.eps) return false;
+                    outer.blink(tx, ty);
                 }
                 //  技能释放结束后应重置cur skill
                 outer.cur_skill = null;
@@ -97,12 +107,17 @@ class Player extends AcGameObject{
         });
 
         $(window).keydown(function(e){
-            if(outer.playground.state !== "fighting") return false;
+            //  return退出function，return true不会令键盘失效，return false会令键盘失效。
+            if(outer.playground.state !== "fighting") return true;
 
-            if(outer.fireball_coldtime > outer.eps) return false;
+            if(outer.fireball_coldtime > outer.eps) return true;
             //  q键
             if(e.which === 81){
                 outer.cur_skill = "fireball";
+                return false;
+            //  f键
+            } else if (e.which === 70) {
+                outer.cur_skill = "blink";
                 return false;
             }
         });
@@ -139,6 +154,14 @@ class Player extends AcGameObject{
                 break;
             }
         }
+    }
+
+    blink(tx, ty){
+        let angle = Math.atan2(ty - this.y, tx - this.x);
+        let d = this.get_dist(this.x, this.y, tx, ty);
+        d = Math.min(d, 0.8);
+        this.x += d * Math.cos(angle);
+        this.y += d * Math.sin(angle);
     }
 
     get_dist(x1, y1, x2, y2){
@@ -203,6 +226,9 @@ class Player extends AcGameObject{
     update_coldtime(){
         this.fireball_coldtime -= this.timedelta / 1000;
         this.fireball_coldtime = Math.max(this.fireball_coldtime, 0);
+
+        this.blink_coldtime -= this.timedelta / 1000;
+        this.blink_coldtime = Math.max(this.blink_coldtime, 0);
     }
 
     //  更新玩家移动
