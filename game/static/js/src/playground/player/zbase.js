@@ -297,6 +297,8 @@ class Player extends AcGameObject{
 
     render_skill_coldtime(){
         let scale = this.playground.scale;
+
+        //  fireball的技能图标
         let x = 1.5, y = 0.9, r = 0.04;
         this.ctx.save();
         this.ctx.beginPath();
@@ -310,6 +312,24 @@ class Player extends AcGameObject{
         this.ctx.beginPath();
         this.ctx.moveTo(x * scale, y * scale);
         this.ctx.arc(x * scale, y * scale, r * scale, 0 - Math.PI / 2, Math.PI * 2 * (1 - this.fireball_coldtime / this.fireball_coldtime_total) - Math.PI / 2, false);
+        this.ctx.fillStyle = "rgba(0, 0, 255, 0.6)";
+        this.ctx.fill();
+        }
+
+        //  blink的技能图标    
+        x = 1.62, y = 0.9, r = 0.04;
+        this.ctx.save();
+        this.ctx.beginPath();
+        this.ctx.arc(x * scale, y * scale, r * scale, 0, Math.PI * 2, false);
+        this.ctx.stroke();
+        this.ctx.clip();
+        this.ctx.drawImage(this.blink_img, (x - r) * scale, (y - r) * scale, r * 2 * scale, r * 2 * scale);
+        this.ctx.restore();
+        //  技能cd - 旋转画圆
+        if (this.blink_coldtime > 0) {
+        this.ctx.beginPath();
+        this.ctx.moveTo(x * scale, y * scale);
+        this.ctx.arc(x * scale, y * scale, r * scale, 0 - Math.PI / 2, Math.PI * 2 * (1 - this.blink_coldtime / this.blink_coldtime_total) - Math.PI / 2, false);
         this.ctx.fillStyle = "rgba(0, 0, 255, 0.6)";
         this.ctx.fill();
         }
