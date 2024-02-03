@@ -125,7 +125,7 @@ class GameMap extends AcGameObject{
     constructor(playground){
         super();
         this.playground = playground;
-        this.$canvas = $('<canvas></canvas>');
+        this.$canvas = $('<canvas tabindex=0></canvas>');
         this.ctx = this.$canvas[0].getContext('2d');
         this.ctx.canvas.width = this.playground.width;
         this.ctx.canvas.height = this.playground.height;
@@ -133,6 +133,8 @@ class GameMap extends AcGameObject{
     }
 
     start(){
+        //  聚焦（即选中）到当前canvas
+        this.$canvas.focus();
     }
 
     resize(){
@@ -275,7 +277,7 @@ class Player extends AcGameObject{
         this.playground.player_count ++;
         this.playground.notice_board.write("Ready to Play:  " + this.playground.player_count + " Player(s)");
 
-        if(this.playground.player_count >= 3){
+        if(this.playground.player_count >= 2){
             this.playground.state = "fighting";
             this.playground.notice_board.write("Fighting");
         }
@@ -331,7 +333,7 @@ class Player extends AcGameObject{
             }
         });
 
-        $(window).keydown(function(e){
+        this.playground.game_map.$canvas.keydown(function(e){
             //  return退出function，return true不会令键盘失效，return false会令键盘失效。
             if(outer.playground.state !== "fighting") return true;
 
