@@ -78,7 +78,9 @@ class Player extends AcGameObject{
         //  e == 1为鼠标左键
         //  e == 2为鼠标滚轮
         this.playground.game_map.$canvas.mousedown(function(e){
-            if(outer.playground.state !== "fighting") return false;
+            // 如果当前room中玩家数量不足（即state不是fighting）时，则玩家不能做任何鼠标操作
+            // 注意：无论return true / false玩家都不能操作，但是false会阻断一切
+            if(outer.playground.state !== "fighting") return true;
             const rect = outer.ctx.canvas.getBoundingClientRect();
             if(e.which === 3){
                 //  注意这里不能用this, 因为this会表示这个function自己.
@@ -110,6 +112,17 @@ class Player extends AcGameObject{
         });
 
         this.playground.game_map.$canvas.keydown(function(e){
+            // 游戏开始前（即等待其他玩家时）可以聊天
+            // 13 = 回车键 = 打开聊天框
+            if(e.which === 13){
+                if(outer.playground.mode === "multi mode"){
+                    outer.playground.chat_field.show_input();
+                    return false;
+                }
+            } else if (e.which === 27){  // 27 = esc = 关闭聊天框
+                outer.playground.chat_field.hide_input();
+                return false;
+            }
             //  return退出function，return true不会令键盘失效，return false会令键盘失效。
             if(outer.playground.state !== "fighting") return true;
 
