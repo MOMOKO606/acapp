@@ -25,8 +25,27 @@ class ChatField{
             if (e.which === 27){  // esc
                 outer.hide_input();
                 return false;
+            }else if (e.which === 13) {  // ENTER
+                let username = outer.playground.root.settings.username;
+                let text = outer.$input.val();
+                if (text) {
+                    outer.$input.val("");
+                    outer.add_message(username, text);
+                }
+                return false;
             }
         });
+    }
+
+    render_message(message) {
+        return $(`<div>${message}</div>`);
+    }
+
+    add_message(username, text) {
+        this.show_history();
+        let message = `[${username}]${text}`;
+        this.$history.append(this.render_message(message));
+        this.$history.scrollTop(this.$history[0].scrollHeight);
     }
 
     show_history(){
