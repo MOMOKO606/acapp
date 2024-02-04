@@ -214,7 +214,6 @@ class Player extends AcGameObject{
             let move_length = this.radius * Math.random() * 5;
             new Particle(this.playground, x, y, radius, vx, vy, color, speed, move_length);
         }
-
         this.radius -= damage;
         if(this.radius < this.eps){
             this.is_dead = true;
