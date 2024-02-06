@@ -66,7 +66,7 @@ class Pool:
 
 class MatchHandler:
     def add_player(self, score, uuid, username, photo, channel_name):
-        player = Player(score, )
+        player = Player(score, uuid, username, photo, channel_name)
         queue.put(player)
         return 0  #  没有返回值会报错
 
