@@ -48,6 +48,9 @@ class MultiPlayer(AsyncWebsocketConsumer):
 
         #  每个玩家接收广播的函数
     async def group_send_event(self, data):
+        if not self.room_name:
+            keys = cache.keys('*%s*'  % (self.uuid))
+            if keys: self.room_name = keys[0]
         #  将信息发送到前端
         await self.send(text_data = json.dumps(data))
 

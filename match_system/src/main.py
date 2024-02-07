@@ -15,6 +15,10 @@ from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 from thrift.server import TServer
 
+from acapp.asgi import channel_layer
+from asgiref.sync import async_to_sync
+from django.core.cache import cache
+
 queue = Queue()  # 消息队列
 
 class Player:
@@ -41,7 +45,28 @@ class Pool:
         return dt <= a_max_dif and dt <= b_max_dif
 
     def match_success(self, ps):
-        print("Match Success: %s $s $s % (ps[0], ps[1), ps[2]")
+        print("Match Success: %s %s %s" % (ps[0].username, ps[1].username, ps[2].username))
+        room_name = "room-%s-%s-%s" % (ps[0].uuid, ps[1].uuid, ps[2].uuid)
+        players = []
+        for p in ps:
+            async_to_sync(channel_layer.group_add)(room_name, p.channel_name)
+            players.append({
+                "uuid": p.uuid,
+                "username": p.username,
+                "photo": p.photo,
+                "hp": 100,
+            })
+        for p in ps:
+            async_to_sync(channel_layer.group_send)(
+                room_name,
+                {
+                    "type": "group_send_event",
+                    "event": "create_player",
+                    "uuid": p.uuid,
+                    "username": p.username,
+                    "photo": p.photo,
+                }
+                )
 
     def increase_waiting_time(self):
         for player in self.players:
@@ -52,7 +77,7 @@ class Pool:
         while len(self.players) >= 3:
             self.players = sorted(self.players, key = lambda p: p.score)
             flag = False
-            for i in range(len(self.players - 2)):
+            for i in range(len(self.players) - 2):
                 a, b, c = self.players[i], self.players[i + 1], self.players[i + 2]
                 if self.check_match(a, b) and self.check_match(a, c) and self.check_match(b, c):
                     self.match_success([a, b, c])
