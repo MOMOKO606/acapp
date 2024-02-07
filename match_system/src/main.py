@@ -35,7 +35,6 @@ class Pool:
         self.players = []
 
     def add_player(self, player):
-        print("Add Player: %s %d" % (player.username, player.score))
         self.players.append(player)
 
     def check_match(self, a, b):
@@ -56,6 +55,7 @@ class Pool:
                 "photo": p.photo,
                 "hp": 100,
             })
+        cache.set(room_name, players, 3600) # 有效时间 3600秒
         for p in ps:
             async_to_sync(channel_layer.group_send)(
                 room_name,
@@ -91,6 +91,7 @@ class Pool:
 
 class MatchHandler:
     def add_player(self, score, uuid, username, photo, channel_name):
+        print("Add Player: %s %d" % (username, score))
         player = Player(score, uuid, username, photo, channel_name)
         queue.put(player)
         return 0  #  没有返回值会报错
