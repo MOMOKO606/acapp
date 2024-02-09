@@ -25,7 +25,7 @@ class ScoreBoard extends AcGameObject {
         this.state = "lose";
     }
 
-    update() {
+    late_update() {
         this.render();
     }
 
