@@ -14,13 +14,7 @@ class AcGamePlayground{
         return colors[Math.floor(Math.random() * 6)];
     }
 
-   // add_listening_events(){
-   //     let outer = this; // 正确定位this，function的this就不是这个this了
-   //     this.$back.click(function(){
-   //         outer.hide(); // 隐藏
-   //         outer.root.$menu.show(); // 显示$menu
-   //     });
-   // }
+
     resize(){
         this.width = this.$playground.width();
         this.height = this.$playground.height();
@@ -38,7 +32,7 @@ class AcGamePlayground{
         this.width = this.$playground.width();
         this.height = this.$playground.height();
         this.game_map = new GameMap(this);
-        
+
         this.mode = mode;
         this.state = "waiting"; //waiting -> fighting -> over
         this.notice_board = new NoticeBoard(this);
@@ -66,17 +60,35 @@ class AcGamePlayground{
     }
 
     hide(){
-       this.$playground.hide(); // 隐藏$playground对象
+        this.$playground.hide(); // 隐藏$playground对象
     }
+
+    create_uuid(){
+        let res = "";
+        for(let i = 0; i < 8; i++){
+            let x = parseInt(Math.floor(Math.random() * 10));
+            res += x;
+        }
+        return res;
+    }
+
 
     start(){
         //this.add_listening_events(); // 开启监听
         let outer = this;
+        let uuid = this.create_uuid();
         //  每当用户改变窗口大小时，都会触发window.resize函数
-        $(window).resize(function(){
+        $(window).on(`resize.${uuid}`, function() {
+            console.log("resize");
             outer.resize();
         });
+        //  关闭游戏窗口前移除监听函数resize
+        if(this.root.AcWingOS) {
+            this.root.AcWingOS.api.window.on_close(function() {
+                $(window).off(`resize.${uuid}`);
+            });
+        }
     }
 }
 
-        
+
