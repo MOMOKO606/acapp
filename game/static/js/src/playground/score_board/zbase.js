@@ -14,15 +14,33 @@ class ScoreBoard extends AcGameObject {
     }
 
     start() {
-        this.win();
+        this.lose();
+    }
+
+    add_listening_events() {
+        let outer = this;
+        let $canvas = this.playground.game_map.$canvas;
+
+        $canvas.on(`click`, function() {
+            outer.playground.hide();
+            outer.playground.root.menu.show();
+        });
     }
 
     win() {
         this.state = "win";
+        let outer = this;
+        setTimeout(function() {
+            outer.add_listening_events();
+        }, 1000);
     }
 
     lose() {
         this.state = "lose";
+        let outer = this;
+        setTimeout(function() {
+            outer.add_listening_events();
+        }, 1000);
     }
 
     late_update() {
