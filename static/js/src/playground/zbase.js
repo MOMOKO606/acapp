@@ -36,6 +36,7 @@ class AcGamePlayground{
         this.mode = mode;
         this.state = "waiting"; //waiting -> fighting -> over
         this.notice_board = new NoticeBoard(this);
+        this.score_board = new ScoreBoard(this);
         this.player_count = 0;
 
         this.resize();
@@ -79,7 +80,6 @@ class AcGamePlayground{
         let uuid = this.create_uuid();
         //  每当用户改变窗口大小时，都会触发window.resize函数
         $(window).on(`resize.${uuid}`, function() {
-            console.log("resize");
             outer.resize();
         });
         //  关闭游戏窗口前移除监听函数resize
