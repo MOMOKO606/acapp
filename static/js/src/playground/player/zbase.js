@@ -53,6 +53,9 @@ class Player extends AcGameObject{
         this.playground.player_count ++;
         this.playground.notice_board.write("Ready to Play:  " + this.playground.player_count + " Player(s)");
 
+        console.log("From Player.start()1", this.playground.players.length);
+        console.log("From Player.start()2", this.playground.player_count);
+
         if(this.playground.player_count >= 2){
             this.playground.state = "fighting";
             this.playground.notice_board.write("Fighting");
