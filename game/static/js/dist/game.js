@@ -1157,12 +1157,6 @@ class Settings{
                Sign in with AcWing
            </div>
         </div>
-        <div class="ac-game-settings-google2">
-            <img width="30" src="https://app6423.acapp.acwing.com.cn/static/image/settings/google_logo.png">
-            <div>
-                Sign in with Google
-            </div>
-        </div>
     </div>
 
     <div class="ac-game-settings-register">
@@ -1217,7 +1211,6 @@ class Settings{
         this.$register.hide();
 
         this.$google_login = this.$settings.find(".ac-game-settings-google img")
-        this.$google2_login = this.$settings.find(".ac-game-settings-google2 img")
 
         this.root.$ac_game.append(this.$settings);
 
@@ -1241,10 +1234,6 @@ class Settings{
 
         this.$google_login.click(function(){
             outer.google_login();
-        });
-
-        this.$google2_login.click(function(){
-            outer.google2_login();
         });
     }
 
@@ -1281,17 +1270,6 @@ class Settings{
         });
     }
 
-    google2_login(){
-        $.ajax({
-            url: "https://app6423.acapp.acwing.com.cn/settings/google2/web/apply_code/",
-            type: "GET",
-            success: function(resp){
-                if(resp.result === "success"){
-                    window.location.replace(resp.apply_code_url);
-                }
-            }
-        });
-    }
 
     //  在远程服务器上登录
     login_on_remote(){
@@ -1322,13 +1300,6 @@ class Settings{
         });
     }
 
-    onSignIn(googleUser) {
-        var profile = googleUser.getBasicProfile();
-        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-        console.log('Name: ' + profile.getName());
-        console.log('Image URL: ' + profile.getImageUrl());
-        console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-    }
 
     //  在远程服务器上注册
     register_on_remote(){
