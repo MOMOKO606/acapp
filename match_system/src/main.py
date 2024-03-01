@@ -44,8 +44,12 @@ class Pool:
         return dt <= a_max_dif and dt <= b_max_dif
 
     def match_success(self, ps):
+        '''
         print("Match Success: %s %s %s" % (ps[0].username, ps[1].username, ps[2].username))
         room_name = "room-%s-%s-%s" % (ps[0].uuid, ps[1].uuid, ps[2].uuid)
+        '''
+        print("Match Success: %s %s" % (ps[0].username, ps[1].username))
+        room_name = "room-%s-%s" % (ps[0].uuid, ps[1].uuid)
         players = []
         for p in ps:
             async_to_sync(channel_layer.group_add)(room_name, p.channel_name)
@@ -74,6 +78,7 @@ class Pool:
 
 
     def match(self):
+        '''
         while len(self.players) >= 3:
             self.players = sorted(self.players, key = lambda p: p.score)
             flag = False
@@ -82,6 +87,21 @@ class Pool:
                 if self.check_match(a, b) and self.check_match(a, c) and self.check_match(b, c):
                     self.match_success([a, b, c])
                     self.players = self.players[:i] + self.players[i + 3:]
+                    flag = True
+                    break
+            if not flag: 
+                break
+        self.increase_waiting_time()
+        '''
+
+        while len(self.players) >= 2:
+            self.players = sorted(self.players, key = lambda p: p.score)
+            flag = False
+            for i in range(len(self.players) - 1):
+                a, b = self.players[i], self.players[i + 1]
+                if self.check_match(a, b):
+                    self.match_success([a, b])
+                    self.players = self.players[:i] + self.players[i + 2:]
                     flag = True
                     break
             if not flag: 
